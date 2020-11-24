@@ -1,0 +1,14 @@
+name: Quote of the day
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 12 * * *"
+    
+jobs:
+  qod:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+      QUOTE=$(curl -s http://api.quotable.io/random | jq '"\(.content) - _\(.author)_"')
+      curl -s -X POST "${{ secrets.WEBHOOK_URL }}" -d "content=$QUOTE"
